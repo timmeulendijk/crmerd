@@ -141,7 +141,7 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      fetch("gojs_crm_erd_final_data.json")
+      fetch("index.json")
         .then(resp => resp.json())
         .then(data => initDiagram(data))
         .catch(err => console.error("Failed to load diagram data:", err));
