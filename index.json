@@ -1,0 +1,527 @@
+{
+  "nodeDataArray": [
+    {
+      "key": "contacts",
+      "items": [
+        {
+          "name": "first_name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "last_name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "email",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "phone",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [
+        {
+          "name": "id",
+          "figure": "Decision",
+          "color": "purple",
+          "iskey": true
+        }
+      ],
+      "color": "#93c5fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "organizations",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "website",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "type",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#93c5fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "artists",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "genre",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "contact",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#93c5fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "deals",
+      "items": [
+        {
+          "name": "title",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "value",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "stage",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#fde68a",
+      "loc": "0 0"
+    },
+    {
+      "key": "proposals",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "status",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "contact",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#fde68a",
+      "loc": "0 0"
+    },
+    {
+      "key": "events",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "date",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "venue",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#6ee7b7",
+      "loc": "0 0"
+    },
+    {
+      "key": "bookings",
+      "items": [
+        {
+          "name": "event",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "artist",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "status",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#6ee7b7",
+      "loc": "0 0"
+    },
+    {
+      "key": "logistics",
+      "items": [
+        {
+          "name": "transport",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "crew",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "notes",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#6ee7b7",
+      "loc": "0 0"
+    },
+    {
+      "key": "invoices",
+      "items": [
+        {
+          "name": "number",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "amount",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "due_date",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#fecdd3",
+      "loc": "0 0"
+    },
+    {
+      "key": "contracts",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "signed_by",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "status",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#fecdd3",
+      "loc": "0 0"
+    },
+    {
+      "key": "tasks",
+      "items": [
+        {
+          "name": "title",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "deadline",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "assigned_to",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#ddd6fe",
+      "loc": "0 0"
+    },
+    {
+      "key": "updates",
+      "items": [
+        {
+          "name": "update",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "timestamp",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#ddd6fe",
+      "loc": "0 0"
+    },
+    {
+      "key": "inbox",
+      "items": [
+        {
+          "name": "subject",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "from",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "received_at",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#bae6fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "conversations",
+      "items": [
+        {
+          "name": "topic",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "participants",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#bae6fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "messages",
+      "items": [
+        {
+          "name": "body",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "sent_at",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "sender",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#bae6fd",
+      "loc": "0 0"
+    },
+    {
+      "key": "directus_users",
+      "items": [
+        {
+          "name": "email",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "role",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#e5e7eb",
+      "loc": "0 0"
+    },
+    {
+      "key": "directus_roles",
+      "items": [
+        {
+          "name": "name",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "app_access",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#e5e7eb",
+      "loc": "0 0"
+    },
+    {
+      "key": "directus_files",
+      "items": [
+        {
+          "name": "filename",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        },
+        {
+          "name": "type",
+          "figure": "Hexagon",
+          "color": "blue",
+          "iskey": false
+        }
+      ],
+      "inheritedItems": [],
+      "color": "#e5e7eb",
+      "loc": "0 0"
+    }
+  ],
+  "linkDataArray": [
+    {
+      "from": "contacts",
+      "to": "organizations",
+      "text": "works for"
+    },
+    {
+      "from": "contacts",
+      "to": "artists",
+      "text": "manages"
+    },
+    {
+      "from": "artists",
+      "to": "events",
+      "text": "performs at"
+    },
+    {
+      "from": "bookings",
+      "to": "events",
+      "text": "booking for"
+    },
+    {
+      "from": "bookings",
+      "to": "artists",
+      "text": "artist"
+    },
+    {
+      "from": "proposals",
+      "to": "contacts",
+      "text": "sent to"
+    },
+    {
+      "from": "deals",
+      "to": "proposals",
+      "text": "based on"
+    },
+    {
+      "from": "contracts",
+      "to": "bookings",
+      "text": "contracted"
+    },
+    {
+      "from": "invoices",
+      "to": "contracts",
+      "text": "billed for"
+    },
+    {
+      "from": "tasks",
+      "to": "updates",
+      "text": "progress"
+    },
+    {
+      "from": "conversations",
+      "to": "messages",
+      "text": "contains"
+    },
+    {
+      "from": "inbox",
+      "to": "messages",
+      "text": "delivers"
+    },
+    {
+      "from": "contacts",
+      "to": "directus_users",
+      "text": "linked user"
+    },
+    {
+      "from": "directus_users",
+      "to": "directus_roles",
+      "text": "has role"
+    }
+  ]
+}

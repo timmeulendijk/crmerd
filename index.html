@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CRM ERD — Fetch JSON</title>
+  <script src="https://unpkg.com/gojs/release/go.js"></script>
+  <script src="https://gojs.net/latest/extensions/Themes.js"></script>
+  <script src="https://gojs.net/latest/extensions/Figures.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    header {
+      height: 64px;
+      background: #1e3a8a;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+    }
+    #diagram {
+      height: calc(100vh - 64px);
+      width: 100%;
+    }
+    .theme-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .theme-btn svg {
+      height: 24px;
+      width: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CRM ERD — Final</h1>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+      <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 3v1m0 16v1m8.49-8.49l.71.71M4.8 4.8l.71.71M21 12h1M2 12H1m15.19 6.19l.71.71M6.1 6.1l.71.71"/>
+      </svg>
+    </button>
+  </header>
+  <div id="diagram"></div>
+  <script>
+    let myDiagram;
+    function initDiagram(data) {
+      const $ = go.GraphObject.make;
+      myDiagram = $(go.Diagram, "diagram", {
+        layout: $(go.ForceDirectedLayout),
+        "undoManager.isEnabled": true,
+        "themeManager.themeMap": new go.Map([
+          { key: "light", value: Modern },
+          { key: "dark", value: ModernDark }
+        ]),
+        "themeManager.changesDivBackground": true,
+        "themeManager.currentTheme": "system"
+      });
+
+      myDiagram.themeManager.set("light", {
+        colors: {
+          primary: "#f7f9fc", green: "#62bd8e", blue: "#3999bf", purple: "#7f36b0", red: "#c41000"
+        }
+      });
+      myDiagram.themeManager.set("dark", {
+        colors: {
+          primary: "#4a4a4a", green: "#429e6f", blue: "#3f9fc6", purple: "#9951c9", red: "#ff4d3d"
+        }
+      });
+
+      const itemTempl = $(go.Panel, "Horizontal", { margin: new go.Margin(2, 0) })
+        .add(
+          $(go.Shape, {
+            desiredSize: new go.Size(15, 15),
+            strokeWidth: 0,
+            margin: new go.Margin(0, 5, 0, 0)
+          },
+          new go.Binding("figure", "figure"),
+          new go.Binding("fill", "color")),
+          $(go.TextBlock, {
+            font: "14px sans-serif"
+          },
+          new go.Binding("text", "name"),
+          new go.Binding("font", "iskey", k => k ? "italic 14px sans-serif" : "14px sans-serif"))
+        );
+
+      myDiagram.nodeTemplate = $(go.Node, "Auto",
+        $(go.Shape, "RoundedRectangle", { stroke: "#e8f1ff", strokeWidth: 3 }).theme("fill", "primary"),
+        $(go.Panel, "Table", { margin: 8, stretch: go.Stretch.Fill })
+          .addRowDefinition(0, { sizing: go.Sizing.None })
+          .add(
+            $(go.TextBlock, { row: 0, alignment: go.Spot.Center, margin: new go.Margin(0, 24, 0, 2), font: "bold 18px sans-serif" })
+              .bind("text", "key").theme("stroke", "text"),
+            go.GraphObject.build("PanelExpanderButton", { row: 0, alignment: go.Spot.TopRight }, "LIST").theme("ButtonIcon.stroke", "text"),
+            $(go.Panel, "Table", { name: "LIST", row: 1, alignment: go.Spot.TopLeft })
+              .add(
+                $(go.TextBlock, "Attributes", { row: 0, alignment: go.Spot.Left, margin: new go.Margin(3, 24, 3, 2), font: "bold 15px sans-serif" }).theme("stroke", "text"),
+                go.GraphObject.build("PanelExpanderButton", { row: 0, alignment: go.Spot.Right }, "NonInherited").theme("ButtonIcon.stroke", "text"),
+                $(go.Panel, "Vertical", { row: 1, name: "NonInherited", alignment: go.Spot.TopLeft, defaultAlignment: go.Spot.Left, itemTemplate: itemTempl })
+                  .bind("itemArray", "items"),
+                $(go.TextBlock, "Inherited Attributes", { row: 2, alignment: go.Spot.Left, margin: new go.Margin(3, 24, 3, 2), font: "bold 15px sans-serif" })
+                  .bind("visible", "inheritedItems", arr => Array.isArray(arr) && arr.length > 0).theme("stroke", "text"),
+                go.GraphObject.build("PanelExpanderButton", { row: 2, alignment: go.Spot.Right }, "Inherited")
+                  .bind("visible", "inheritedItems", arr => Array.isArray(arr) && arr.length > 0).theme("ButtonIcon.stroke", "text"),
+                $(go.Panel, "Vertical", { row: 3, name: "Inherited", alignment: go.Spot.TopLeft, defaultAlignment: go.Spot.Left, itemTemplate: itemTempl })
+                  .bind("itemArray", "inheritedItems")
+              )
+          )
+      );
+
+      myDiagram.linkTemplate = $(go.Link, {
+        routing: go.Link.AvoidsNodes,
+        corner: 5,
+        curve: go.Curve.JumpOver
+      },
+        $(go.Shape, { stroke: "#f7f9fc", strokeWidth: 3 }).theme("stroke", "link"),
+        $(go.TextBlock, { segmentIndex: 0, segmentOffset: new go.Point(0, -10), font: "10px sans-serif" }).bind("text").theme("stroke", "text"),
+        $(go.TextBlock, { segmentIndex: -1, segmentOffset: new go.Point(0, -10), font: "10px sans-serif" }).bind("text", "toText").theme("stroke", "text")
+      );
+
+      myDiagram.model = new go.GraphLinksModel(data.nodeDataArray, data.linkDataArray);
+      myDiagram.zoomToFit();
+    }
+
+    function toggleTheme() {
+      const d = go.Diagram.fromDiv("diagram");
+      const current = d.themeManager.currentTheme;
+      const newTheme = current === "dark" ? "light" : "dark";
+      d.themeManager.currentTheme = newTheme;
+      document.getElementById("themeIcon").innerHTML = newTheme === "dark"
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.49-8.49l.71.71M4.8 4.8l.71.71M21 12h1M2 12H1m15.19 6.19l.71.71M6.1 6.1l.71.71" />';
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch("gojs_crm_erd_final_data.json")
+        .then(resp => resp.json())
+        .then(data => initDiagram(data))
+        .catch(err => console.error("Failed to load diagram data:", err));
+    });
+  </script>
+</body>
+</html>
