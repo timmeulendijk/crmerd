@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CRM ERD – Mobile Optimized</title>
+
+  <!-- GoJS + Tailwind CDN -->
+  <script src="https://unpkg.com/gojs/release/go.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: ui-sans-serif, sans-serif;
+    }
+    #diagram {
+      width: 100%;
+      height: calc(100vh - 64px);
+      touch-action: pinch-zoom;
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+
+  <header class="h-16 w-full flex justify-between items-center px-4 shadow-md bg-blue-600 dark:bg-gray-800 fixed top-0 z-50">
+    <h1 class="text-lg font-bold text-white">CRM ERD</h1>
+    <button onclick="toggleTheme()" aria-label="Toggle Theme" class="p-2 text-white rounded hover:bg-blue-500 dark:hover:bg-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m8.49-8.49l.71.71M4.8 4.8l.71.71m13.97 12.02l-.71-.71M4.8 19.2l-.71-.71M21 12h1M2 12H1"/>
+      </svg>
+    </button>
+  </header>
+
+  <main class="pt-16">
+    <div id="diagram"></div>
+  </main>
+
+  <script>
+    const $ = go.GraphObject.make;
+
+    function init() {
+      const diagram = $(go.Diagram, "diagram", {
+        initialContentAlignment: go.Spot.Center,
+        autoScale: go.Diagram.Uniform,
+        "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,
+        "allowZoom": true,
+        "allowHorizontalScroll": true,
+        "allowVerticalScroll": true,
+        "undoManager.isEnabled": true
+      });
+
+      diagram.nodeTemplate = $(
+        go.Node, "Auto",
+        new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify),
+        $(go.Shape, "RoundedRectangle",
+          new go.Binding("fill", "color"),
+          { stroke: "white", strokeWidth: 2 }
+        ),
+        $(go.Panel, "Vertical",
+          { margin: 6 },
+          $(go.TextBlock,
+            new go.Binding("text", "key"),
+            { font: "bold 14px sans-serif", margin: 2 }
+          ),
+          $(go.TextBlock,
+            new go.Binding("text", "icon"),
+            { font: "16px", margin: 2 }
+          ),
+          $(go.Panel, "Table",
+            new go.Binding("itemArray", "fields"),
+            {
+              itemTemplate: $(
+                go.Panel, "TableRow",
+                $(go.TextBlock, { column: 0, margin: 2, font: "12px monospace" }, new go.Binding("text", "")),
+              )
+            }
+          )
+        )
+      );
+
+      diagram.linkTemplate = $(
+        go.Link,
+        { routing: go.Link.AvoidsNodes, curve: go.Link.JumpOver },
+        $(go.Shape),
+        $(go.Shape, { toArrow: "OpenTriangle" }),
+        $(go.TextBlock,
+          { segmentOffset: new go.Point(0, -10), font: "10px monospace" },
+          new go.Binding("text", "text"))
+      );
+
+      diagram.model = new go.GraphLinksModel([{"key": "contacts", "category": "CRM", "color": "#60a5fa", "icon": "\ud83d\udc64", "fields": ["first_name", "last_name", "email", "phone"], "location": {"x": 80, "y": 60}}, {"key": "organizations", "category": "CRM", "color": "#60a5fa", "icon": "\ud83c\udfe2", "fields": ["name", "website", "type"], "location": {"x": 380, "y": 60}}, {"key": "artists", "category": "CRM", "color": "#60a5fa", "icon": "\ud83c\udfa4", "fields": ["name", "genre", "contact"], "location": {"x": 680, "y": 60}}, {"key": "deals", "category": "Sales", "color": "#facc15", "icon": "\ud83d\udcbc", "fields": ["title", "value", "stage"], "location": {"x": 80, "y": 310}}, {"key": "proposals", "category": "Sales", "color": "#facc15", "icon": "\ud83d\udcc4", "fields": ["name", "status", "contact"], "location": {"x": 380, "y": 310}}, {"key": "events", "category": "Gigs", "color": "#34d399", "icon": "\ud83d\udcc5", "fields": ["name", "date", "venue"], "location": {"x": 80, "y": 560}}, {"key": "bookings", "category": "Gigs", "color": "#34d399", "icon": "\ud83d\udccc", "fields": ["event", "artist", "status"], "location": {"x": 380, "y": 560}}, {"key": "logistics", "category": "Gigs", "color": "#34d399", "icon": "\ud83d\ude9a", "fields": ["transport", "crew", "notes"], "location": {"x": 680, "y": 560}}, {"key": "inbox", "category": "Comms", "color": "#38bdf8", "icon": "\ud83d\udce5", "fields": ["subject", "from", "received_at"], "location": {"x": 80, "y": 810}}, {"key": "messages", "category": "Comms", "color": "#38bdf8", "icon": "\u2709\ufe0f", "fields": ["body", "sent_at", "sender"], "location": {"x": 380, "y": 810}}, {"key": "conversations", "category": "Comms", "color": "#38bdf8", "icon": "\ud83d\udcac", "fields": ["topic", "participants"], "location": {"x": 680, "y": 810}}, {"key": "tasks", "category": "Project", "color": "#a78bfa", "icon": "\u2705", "fields": ["title", "deadline", "assigned_to"], "location": {"x": 80, "y": 1060}}, {"key": "updates", "category": "Project", "color": "#a78bfa", "icon": "\ud83d\udd04", "fields": ["update", "timestamp"], "location": {"x": 380, "y": 1060}}, {"key": "invoices", "category": "Finance", "color": "#f87171", "icon": "\ud83e\uddfe", "fields": ["number", "amount", "due_date"], "location": {"x": 80, "y": 1310}}, {"key": "contracts", "category": "Finance", "color": "#f87171", "icon": "\ud83d\udcdc", "fields": ["name", "signed_by", "status"], "location": {"x": 380, "y": 1310}}, {"key": "directus_users", "category": "System", "color": "#9ca3af", "icon": "\ud83d\udc65", "fields": ["email", "role"], "location": {"x": 80, "y": 1560}}, {"key": "directus_roles", "category": "System", "color": "#9ca3af", "icon": "\ud83d\udee1", "fields": ["name", "app_access"], "location": {"x": 380, "y": 1560}}, {"key": "directus_files", "category": "System", "color": "#9ca3af", "icon": "\ud83d\udcc1", "fields": ["filename", "type"], "location": {"x": 680, "y": 1560}}], [{"from": "contacts", "to": "organizations", "text": "works for"}, {"from": "contacts", "to": "artists", "text": "manages"}, {"from": "artists", "to": "events", "text": "performs at"}, {"from": "bookings", "to": "events", "text": "booking for"}, {"from": "bookings", "to": "artists", "text": "artist"}, {"from": "proposals", "to": "contacts", "text": "sent to"}, {"from": "deals", "to": "proposals", "text": "based on"}, {"from": "contracts", "to": "bookings", "text": "contracted"}, {"from": "invoices", "to": "contracts", "text": "billed for"}, {"from": "tasks", "to": "updates", "text": "progress"}, {"from": "conversations", "to": "messages", "text": "contains"}, {"from": "inbox", "to": "messages", "text": "delivers"}, {"from": "contacts", "to": "directus_users", "text": "linked user"}, {"from": "directus_users", "to": "directus_roles", "text": "has role"}]);
+      diagram.zoomToFit();
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle("dark");
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
