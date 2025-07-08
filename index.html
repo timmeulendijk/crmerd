@@ -1,15 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>JointJS Minimal Test</title>
+  <meta charset="UTF-8" />
+  <title>Minimal JointJS ERD Test</title>
+
+  <!-- Dependencies (order matters) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone-min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f0f0f0;
+    }
+    #paper {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
-  <div id="paper" style="width:100vw; height:100vh;"></div>
+  <div id="paper"></div>
 
   <script>
     const graph = new joint.dia.Graph();
@@ -19,19 +35,26 @@
       model: graph,
       width: window.innerWidth,
       height: window.innerHeight,
-      gridSize: 10
+      gridSize: 10,
+      drawGrid: true,
+      background: { color: '#f0f0f0' }
     });
 
+    // Add one visible ERD table block
     const rect = new joint.shapes.standard.Rectangle();
-    rect.position(100, 100);
-    rect.resize(100, 40);
+    rect.position(200, 200); // x, y
+    rect.resize(200, 120);   // width, height
     rect.attr({
       body: {
-        fill: 'blue'
+        fill: '#6366f1',       // Indigo
+        stroke: '#111827',
+        strokeWidth: 2
       },
       label: {
-        text: 'Hello JointJS',
-        fill: 'white'
+        text: 'contacts\n- id\n- first_name\n- last_name\n- email\n- status',
+        fill: '#ffffff',
+        fontSize: 12,
+        fontFamily: 'monospace'
       }
     });
     rect.addTo(graph);
