@@ -1,28 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>CRM ERD Diagram – JointJS</title>
+  <meta charset="UTF-8">
+  <title>JointJS Minimal Test</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone-min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jointjs/dist/joint.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jointjs/dist/joint.min.css" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: sans-serif;
-    }
-    #paper {
-      width: 100vw;
-      height: 100vh;
-      background: #f9fafb;
-    }
-  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.css" />
 </head>
 <body>
-  <div id="paper"></div>
+  <div id="paper" style="width:100vw; height:100vh;"></div>
+
   <script>
     const graph = new joint.dia.Graph();
 
@@ -31,124 +19,22 @@
       model: graph,
       width: window.innerWidth,
       height: window.innerHeight,
-      gridSize: 10,
-      drawGrid: true,
-      background: { color: '#f0f0f0' }
+      gridSize: 10
     });
 
-    const tableStyle = {
-      type: 'standard.Rectangle',
-      size: { width: 200, height: 240 },
-      attrs: {
-        body: {
-          rx: 6, ry: 6,
-          strokeWidth: 2,
-          fill: '#ffffff',
-          stroke: '#3b82f6'
-        },
-        label: {
-          fontSize: 13,
-          fontWeight: 'bold',
-          fill: '#111827'
-        }
-      }
-    };
-
-    const tables = {
-      contacts: ['id', 'first_name', 'last_name', 'email', 'phone', 'status'],
-      contact_addresses: ['id', 'contact_id', 'street_address', 'address_locality', 'address_region', 'postal_code', 'country'],
-      organizations: ['id', 'name', 'website', 'status'],
-      organization_addresses: ['id', 'organization_id', 'street_address', 'address_locality', 'address_region', 'postal_code', 'country'],
-      os_deals: ['id', 'name', 'deal_stage_id', 'organization_id', 'close_date', 'value'],
-      os_deal_stages: ['id', 'name', 'order', 'organization_id'],
-      os_proposals: ['id', 'name', 'organization_id', 'status'],
-      os_projects: ['id', 'name', 'organization_id', 'status', 'description'],
-      os_tasks: ['id', 'name', 'project_id', 'due_date', 'status'],
-      os_invoices: ['id', 'invoice_number', 'organization_id', 'status', 'total', 'due_date'],
-      os_expenses: ['id', 'name', 'organization_id', 'date', 'cost'],
-      os_payments: ['id', 'invoice_id', 'organization_id', 'payment_date', 'amount'],
-      os_items: ['id', 'name', 'description', 'price', 'organization_id'],
-      os_taxes: ['id', 'name', 'rate', 'is_default', 'organization_id'],
-      os_invoice_items: ['invoice_id', 'item_id', 'quantity'],
-      os_invoice_taxes: ['invoice_id', 'tax_id'],
-      organizations_contacts: ['organizations_id', 'contacts_id'],
-      os_deal_contacts: ['os_deals_id', 'contacts_id'],
-      os_proposal_contacts: ['os_proposals_id', 'contacts_id'],
-      os_project_contacts: ['os_projects_id', 'contacts_id'],
-      os_settings: ['id', 'key', 'value']
-    };
-
-    const nodes = {};
-    let x = 40, y = 40;
-    Object.entries(tables).forEach(([name, fields], i) => {
-      const text = name + '\n' + fields.join('\n');
-      nodes[name] = new joint.shapes.standard.Rectangle({
-        ...tableStyle,
-        position: { x, y },
-        size: { width: 200, height: Math.max(40 + fields.length * 18, 80) },
-        attrs: {
-          label: {
-            text,
-            fontFamily: 'monospace',
-            fontSize: 11,
-            refY: 10,
-            yAlignment: 'top'
-          }
-        }
-      });
-      graph.addCell(nodes[name]);
-      x += 240;
-      if (x > 1200) {
-        x = 40;
-        y += 300;
+    const rect = new joint.shapes.standard.Rectangle();
+    rect.position(100, 100);
+    rect.resize(100, 40);
+    rect.attr({
+      body: {
+        fill: 'blue'
+      },
+      label: {
+        text: 'Hello JointJS',
+        fill: 'white'
       }
     });
-
-    const relations = [
-      ['contact_addresses', 'contacts'],
-      ['organization_addresses', 'organizations'],
-      ['os_deals', 'organizations'],
-      ['os_deals', 'os_deal_stages'],
-      ['os_projects', 'organizations'],
-      ['os_proposals', 'organizations'],
-      ['os_tasks', 'os_projects'],
-      ['os_invoices', 'organizations'],
-      ['os_expenses', 'organizations'],
-      ['os_payments', 'os_invoices'],
-      ['os_payments', 'organizations'],
-      ['os_items', 'organizations'],
-      ['os_taxes', 'organizations'],
-      ['os_invoice_items', 'os_invoices'],
-      ['os_invoice_items', 'os_items'],
-      ['os_invoice_taxes', 'os_invoices'],
-      ['os_invoice_taxes', 'os_taxes'],
-      ['organizations_contacts', 'organizations'],
-      ['organizations_contacts', 'contacts'],
-      ['os_deal_contacts', 'os_deals'],
-      ['os_deal_contacts', 'contacts'],
-      ['os_proposal_contacts', 'os_proposals'],
-      ['os_proposal_contacts', 'contacts'],
-      ['os_project_contacts', 'os_projects'],
-      ['os_project_contacts', 'contacts']
-    ];
-
-    relations.forEach(([src, dst]) => {
-      graph.addCell(new joint.dia.Link({
-        source: { id: nodes[src].id },
-        target: { id: nodes[dst].id },
-        attrs: {
-          line: {
-            stroke: '#4b5563',
-            strokeWidth: 1.5,
-            targetMarker: {
-              type: 'classic',
-              fill: '#4b5563',
-              stroke: '#4b5563'
-            }
-          }
-        }
-      }));
-    });
+    rect.addTo(graph);
   </script>
 </body>
 </html>
