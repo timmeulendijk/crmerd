@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CRM ERD – JointJS Minimal</title>
+  <title>CRM ERD – Local Files</title>
 
-  <!-- Dependencies in correct order -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone-min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.6.5/joint.min.css" />
+  <!-- Self-hosted CSS -->
+  <link rel="stylesheet" href="./joint.min.css" />
 
   <style>
     html, body {
@@ -28,6 +25,11 @@
 <body>
   <div id="paper"></div>
 
+  <!-- Self-hosted JS -->
+  <script src="./lodash.min.js"></script>
+  <script src="./backbone-min.js"></script>
+  <script src="./joint.min.js"></script>
+
   <script>
     const graph = new joint.dia.Graph();
 
@@ -41,13 +43,12 @@
       background: { color: '#f3f4f6' }
     });
 
-    // Add one visible ERD block for "contacts"
     const rect = new joint.shapes.standard.Rectangle();
-    rect.position(120, 100);  // x, y
-    rect.resize(220, 140);    // width, height
+    rect.position(120, 100);
+    rect.resize(220, 140);
     rect.attr({
       body: {
-        fill: '#6366f1',  // Indigo
+        fill: '#6366f1',
         stroke: '#111827',
         strokeWidth: 2,
         rx: 6,
