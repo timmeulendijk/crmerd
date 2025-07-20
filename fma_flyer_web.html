@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FMA Flyer - Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: radial-gradient(circle at top left, rgba(0,255,200,0.1), transparent),
+                  radial-gradient(circle at bottom right, rgba(255,0,200,0.1), transparent),
+                  #0f0f0f;
+    }
+    .bento {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.06);
+    }
+    .bento:hover {
+      border-color: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 16px rgba(0, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="text-white px-6 py-10">
+  <header class="text-center mb-10">
+    <img src="https://timmeulendijk.github.io/crmerd/fma-light.png" class="w-24 mx-auto mb-3" alt="FMA Logo" />
+    <h1 class="text-4xl font-bold tracking-tight">2025 Artist Roster</h1>
+  </header>
+
+  <div class="max-w-3xl mx-auto mb-10">
+    <input type="text" id="searchInput" placeholder="Search artists, genres, labels..."
+      class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50" />
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('searchInput');
+      input.addEventListener('input', () => {
+        const term = input.value.toLowerCase();
+        document.querySelectorAll('.bento').forEach(card => {
+          card.style.display = card.innerText.toLowerCase().includes(term) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for artist in artists %}
+      
+<div class="relative bento p-5 flex flex-col justify-between gap-3">
+  <img src="{{ artist.image | default: 'https://placehold.co/120x120?text=DJ' }}" alt="{{ artist.name }} photo"
+       class="w-24 h-24 rounded-full object-cover mx-auto border border-white/20 shadow mb-2" />
+
+  <div class="absolute top-3 right-3 group">
+    <div class="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-xs text-black cursor-pointer" title="Details">i</div>
+    <div class="absolute right-0 mt-2 w-64 p-3 text-sm rounded-lg shadow-lg bg-zinc-800/90 text-white opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
+      <p><strong>Styles:</strong><br>{{ artist.genres }}</p>
+      <p class="mt-2"><strong>Labels:</strong><br>{{ artist.labels }}</p>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <h2 class="text-xl font-semibold">{{ artist.name }}</h2>
+    <p class="text-sm text-teal-400 mt-1">{{ artist.city }}, {{ artist.country }}</p>
+  </div>
+
+  <div class="flex justify-center flex-wrap gap-3 mt-3">
+    {% if artist.soundcloud %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-label="SoundCloud">
+  <title>SoundCloud</title>
+  <path d="M447.8 153.6c-2 43.6-32.4 103.3-91.4 179.1c-60.9 79.2-112.4 118.8-154.6 118.8q-39.15 0-66.3-72.3C100.3 250 85.3 174.3 56.2 174.3c-3.4 0-15.1 7.1-35.2 21.1L0 168.2c51.6-45.3 100.9-95.7 131.8-98.5c34.9-3.4 56.3 20.5 64.4 71.5c28.7 181.5 41.4 208.9 93.6 126.7c18.7-29.6 28.8-52.1 30.2-67.6c4.8-45.9-35.8-42.8-63.3-31c22-72.1 64.1-107.1 126.2-105.1c45.8 1.2 67.5 31.1 64.9 89.4"/>
+</svg>
+{% endif %}
+{% if artist.spotify %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 496 512" xmlns="http://www.w3.org/2000/svg" aria-label="Spotify">
+  <title>Spotify</title>
+  <path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248s248-111.1 248-248S384.9 8 248 8m100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6c-62.4-37.6-135-39.2-206.7-24.5c-3.9 1-9 2.6-11.9 2.6c-9.7 0-15.8-7.7-15.8-15.8c0-10.3 6.1-15.2 13.6-16.8c81.9-18.1 165.6-16.5 237 26.2c6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4"/>
+</svg>
+{% endif %}
+{% if artist.instagram %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-label="Instagram">
+  <title>Instagram</title>
+  <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141m0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7"/>
+</svg>
+{% endif %}
+{% if artist.youtube %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg" aria-label="YouTube">
+  <title>YouTube</title>
+  <path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597C14.928 166.95 14.928 256.39 14.928 256.39s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821c11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z"/>
+</svg>
+{% endif %}
+{% if artist.facebook %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-label="Facebook">
+  <title>Facebook</title>
+  <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.5 91 225.9 209 240v-168h-63v-72h63v-55.4c0-62.1 36.9-96.6 93.7-96.6 27.1 0 55.6 5 55.6 5v61h-31.3c-30.8 0-40.4 19.1-40.4 38.7V256h68.7l-11 72h-57.7v168c118-14.1 209-116.5 209-240z"/>
+</svg>
+{% endif %}
+{% if artist.tiktok %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-label="TikTok">
+  <title>TikTok</title>
+  <path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25v178.72A162.55 162.55 0 1 1 185 188.31v89.89a74.62 74.62 0 1 0 52.23 71.18V0h88a121 121 0 0 0 1.86 22.17A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z"/>
+</svg>
+{% endif %}
+{% if artist.beatport %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 1036 1200" xmlns="http://www.w3.org/2000/svg" aria-label="Beatport">
+  <title>Beatport</title>
+  <path d="M817.7,763.3c0,120-95.8,217-217,217c-120,0-215.8-94.6-215.8-217c0-57.6,21.8-108.5,56.4-146.7L294.6,763.3l-77-77 l165.5-163.7c22.4-22.4,33.9-51.5,33.9-83.6V233.6h108.5V439c0,63-22.4,116.4-66.1,160l-4.9,4.8c38.2-35.2,90.3-56.4,146.1-56.4 C723.8,547.5,817.7,645.1,817.7,763.3z M719.5,763.3c0-64.3-53.3-116.4-118.8-116.4c-66.1,0-117.6,54.6-117.6,116.4 c0,63.6,52.1,117.6,117.6,117.6C668.6,880.9,719.5,825.8,719.5,763.3z"/>
+</svg>
+{% endif %}
+{% if artist.vimeo %}
+<svg class="w-5 h-5 text-white hover:text-teal-300 transition" fill="currentColor" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-label="Vimeo">
+  <title>Vimeo</title>
+  <path d="M447.8 153.6c-2 43.6-32.4 103.3-91.4 179.1c-60.9 79.2-112.4 118.8-154.6 118.8q-39.15 0-66.3-72.3C100.3 250 85.3 174.3 56.2 174.3c-3.4 0-15.1 7.1-35.2 21.1L0 168.2c51.6-45.3 100.9-95.7 131.8-98.5c34.9-3.4 56.3 20.5 64.4 71.5c28.7 181.5 41.4 208.9 93.6 126.7c18.7-29.6 28.8-52.1 30.2-67.6c4.8-45.9-35.8-42.8-63.3-31c22-72.1 64.1-107.1 126.2-105.1c45.8 1.2 67.5 31.1 64.9 89.4"/>
+</svg>
+{% endif %}
+  </div>
+</div>
+
+    {% endfor %}
+  </div>
+</body>
+</html>

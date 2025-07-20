@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FMA Flyer - Interactive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #0f0f0f;
+    }
+    .bento {
+      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.04);
+    }
+    @media print {
+      body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body class="text-white px-6 py-10">
+  <header class="text-center mb-10">
+    <img src="https://timmeulendijk.github.io/crmerd/fma-light.png" class="w-24 mx-auto mb-3" alt="FMA Logo" />
+    <h1 class="text-4xl font-bold tracking-tight">2025 Artist Roster</h1>
+  </header>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for artist in artists %}
+      
+<div class="bento p-5 flex flex-col justify-between gap-3 text-center">
+  <h2 class="text-xl font-semibold">{{ artist.name }}</h2>
+  <p class="text-sm text-teal-400 mt-1">{{ artist.city }}, {{ artist.country }}</p>
+  <p class="text-xs mt-2 italic text-white/80">{{ artist.genres }}</p>
+  <p class="text-xs mt-1 text-white/60">{{ artist.labels }}</p>
+</div>
+
+    {% endfor %}
+  </div>
+</body>
+</html>
