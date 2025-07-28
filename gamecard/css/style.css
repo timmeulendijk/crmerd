@@ -273,7 +273,7 @@
 
 #card .logo {
   max-width: 200px;
-  object-position: 20px -30px;
+  object-position: 20px;
 }
 
 #card .avatar__content .avatar {
