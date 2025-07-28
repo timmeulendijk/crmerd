@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>FMA SVG Icons - Final</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Sets theme before render to prevent screen flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        tailwind.config = { darkMode: 'class' };
+    </script>
+    <style>
+        /* 3D Spin Animation */
+        @keyframes spin-3d {
+            from {
+                transform: rotateY(0deg);
+            }
+
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .spin-3d {
+            animation: spin-3d 2s linear infinite;
+        }
+
+        .icon-container {
+            perspective: 1000px;
+        }
+
+        .icon-container svg {
+            transform-style: preserve-3d;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Shimmer Animation (Color is controlled by JS) */
+        @keyframes shimmer {
+            from {
+                filter: brightness(1) drop-shadow(0 0 0.4rem var(--shimmer-color));
+            }
+
+            to {
+                filter: brightness(1.5) drop-shadow(0 0 1.2rem var(--shimmer-color));
+            }
+        }
+
+        .shimmer svg {
+            animation: shimmer 2s infinite linear alternate;
+        }
+
+        /* Active button style */
+        .mode-btn.active {
+            background-color: #16ebc2;
+            color: black;
+        }
+
+        /* Icon SVG styles */
+        .icon-container svg {
+            transition: all 0.3s ease;
+        }
+
+        /* Beatport Icon CSS Fix */
+        #beatport-icon {
+            stroke-width: 0 !important;
+            transform: scale(1.55);
+            transform-origin: center;
+        }
+
+        /* Beatport path inherits fill and stroke */
+        #beatport-icon path {
+            stroke: inherit;
+            stroke-width: inherit;
+            fill: inherit;
+            transition: all 0.3s ease;
+        }
+
+        /* Optional: apply shimmer to the container for better effect */
+        .shimmer .icon-container {
+            animation: shimmer 2s infinite linear alternate;
+        }
+    </style>
+</head>
+
+<body class="bg-zinc-100 text-black dark:bg-zinc-900 dark:text-white transition-colors duration-300">
+    <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <button class="p-2 rounded-full bg-zinc-200 dark:bg-zinc-700" id="open-colors-btn"
+            onclick="toggleColorPanel(true)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path
+                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+        </button>
+        <button class="hidden p-2 rounded-full bg-zinc-200 dark:bg-zinc-700" id="close-colors-btn"
+            onclick="toggleColorPanel(false)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+        </button>
+        <button aria-label="Toggle theme" class="p-2 rounded-full bg-zinc-200 dark:bg-zinc-700" onclick="toggleDark()">
+            <svg class="w-5 h-5 text-black dark:text-[#16ebc2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path d="" id="theme-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="sticky top-4 z-40" id="logo-wrapper"><img class="h-8 pl-4 w-auto dark:hidden" id="logo-light"
+            src="https://raw.githubusercontent.com/timmeulendijk/crmerd/refs/heads/main/fma-dark.png" /><img
+            class="h-8 pl-4 w-auto hidden dark:block" id="logo-dark"
+            src="https://raw.githubusercontent.com/timmeulendijk/crmerd/refs/heads/main/fma-light.png" /></div>
+    <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        <div
+            class="sticky top-[50px] z-40 p-4 rounded-xl bg-white/70 dark:bg-zinc-800/70 shadow-lg ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-md space-y-3">
+            <div class="flex flex-wrap gap-2" id="animation-modes">
+                <button class="mode-btn px-3 py-1 rounded-md text-sm" onclick="setMode(this, 'static')">Static</button>
+                <button class="mode-btn px-3 py-1 rounded-md text-sm" onclick="setMode(this, 'pulse')">Pulse</button>
+                <button class="mode-btn px-3 py-1 rounded-md text-sm" onclick="setMode(this, 'spin-3d')">3D
+                    Spin</button>
+                <button class="mode-btn px-3 py-1 rounded-md text-sm"
+                    onclick="setMode(this, 'shimmer')">Shimmer</button>
+            </div>
+            <div class="hidden" id="color-panel">
+                <div class="border-t border-black/10 dark:border-white/10 pt-4 space-y-4">
+                    <div class="flex flex-row gap-x-4">
+                        <div class="w-1/2 space-y-2">
+                            <h3 class="font-bold text-sm">Dark Mode</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center justify-between gap-2"><label for="darkFill">Fill</label>
+                                    <input class="h-6 w-10 rounded" id="darkFill" type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label
+                                        for="darkStroke">Outline</label> <input class="h-6 w-10 rounded" id="darkStroke"
+                                        type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label for="darkHoverFill">Hover
+                                        Fill</label> <input class="h-6 w-10 rounded" id="darkHoverFill" type="color" />
+                                </div>
+                                <div class="flex items-center justify-between gap-2"><label for="darkHoverStroke">Hover
+                                        Outline</label> <input class="h-6 w-10 rounded" id="darkHoverStroke"
+                                        type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label
+                                        for="darkShimmer">Shimmer</label> <input class="h-6 w-10 rounded"
+                                        id="darkShimmer" type="color" /></div>
+                            </div>
+                        </div>
+                        <div class="w-1/2 space-y-2">
+                            <h3 class="font-bold text-sm">Light Mode</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center justify-between gap-2"><label for="lightFill">Fill</label>
+                                    <input class="h-6 w-10 rounded" id="lightFill" type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label
+                                        for="lightStroke">Outline</label> <input class="h-6 w-10 rounded"
+                                        id="lightStroke" type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label for="lightHoverFill">Hover
+                                        Fill</label> <input class="h-6 w-10 rounded" id="lightHoverFill" type="color" />
+                                </div>
+                                <div class="flex items-center justify-between gap-2"><label for="lightHoverStroke">Hover
+                                        Outline</label> <input class="h-6 w-10 rounded" id="lightHoverStroke"
+                                        type="color" /></div>
+                                <div class="flex items-center justify-between gap-2"><label
+                                        for="lightShimmer">Shimmer</label> <input class="h-6 w-10 rounded"
+                                        id="lightShimmer" type="color" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full px-3 py-1.5 text-sm font-semibold text-black rounded-md bg-[#16ebc2] hover:bg-[#16ebc2] transition-colors"
+                        onclick="resetColors()">Reset All Colors</button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="icon-grid">
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 448 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141m0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7m146.4-194.3c0 14.9-12 26.8-26.8 26.8c-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8s26.8 12 26.8 26.8m76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9c-26.2-26.2-58-34.4-93.9-36.2c-37-2.1-147.9-2.1-184.9 0c-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9c1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0c35.9-1.7 67.7-9.9 93.9-36.2c26.2-26.2 34.4-58 36.2-93.9c2.1-37 2.1-147.8 0-184.8M398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6c-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6c-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6c29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6c11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">Instagram</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 576 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597C14.928 166.95 14.928 256.39 14.928 256.39s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821c11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305m-317.51 213.508V175.185l142.739 81.205z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">YouTube</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 496 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248s248-111.1 248-248S384.9 8 248 8m100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6c-62.4-37.6-135-39.2-206.7-24.5c-3.9 1-9 2.6-11.9 2.6c-9.7 0-15.8-7.7-15.8-15.8c0-10.3 6.1-15.2 13.6-16.8c81.9-18.1 165.6-16.5 237 26.2c6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4m26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2c-62.5-37-155.7-51.9-238.6-29.4c-4.8 1.3-7.4 2.6-11.9 2.6c-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6c64.9 0 127.6 16.1 177 45.5c8.1 4.8 11.3 11 11.3 19.7c-.1 10.8-8.5 19.5-19.4 19.5m31-76.2c-5.2 0-8.4-1.3-12.9-3.9c-71.2-42.5-198.5-52.7-280.9-29.7c-3.6 1-8.1 2.6-12.9 2.6c-13.2 0-23.3-10.3-23.3-23.6c0-13.6 8.4-21.3 17.4-23.9c35.2-10.3 74.6-15.2 117.5-15.2c73 0 149.5 15.2 205.4 47.8c7.8 4.5 12.9 10.7 12.9 22.6c0 13.6-11 23.3-23.2 23.3">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">Spotify</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 448 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25v178.72A162.55 162.55 0 1 1 185 188.31v89.89a74.62 74.62 0 1 0 52.23 71.18V0h88a121 121 0 0 0 1.86 22.17A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">TikTok</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 512 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256c0 120 82.7 220.8 194.2 248.5V334.2h-52.8V256h52.8v-33.7c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287v175.9C413.8 494.8 512 386.9 512 256">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">Facebook</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" id="beatport-icon" viewbox="0 0 1036 1200"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M817.7,763.3c0,120-95.8,217-217,217c-120,0-215.8-94.6-215.8-217c0-57.6,21.8-108.5,56.4-146.7L294.6,763.3l-77-77 l165.5-163.7c22.4-22.4,33.9-51.5,33.9-83.6V233.6h108.5V439c0,63-22.4,116.4-66.1,160l-4.9,4.8c38.2-35.2,90.3-56.4,146.1-56.4 C723.8,547.5,817.7,645.1,817.7,763.3z M719.5,763.3c0-64.3-53.3-116.4-118.8-116.4c-66.1,0-117.6,54.6-117.6,116.4 c0,63.6,52.1,117.6,117.6,117.6C668.6,880.9,719.5,825.8,719.5,763.3z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">Beatport</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 448 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M447.8 153.6c-2 43.6-32.4 103.3-91.4 179.1c-60.9 79.2-112.4 118.8-154.6 118.8q-39.15 0-66.3-72.3C100.3 250 85.3 174.3 56.2 174.3c-3.4 0-15.1 7.1-35.2 21.1L0 168.2c51.6-45.3 100.9-95.7 131.8-98.5c34.9-3.4 56.3 20.5 64.4 71.5c28.7 181.5 41.4 208.9 93.6 126.7c18.7-29.6 28.8-52.1 30.2-67.6c4.8-45.9-35.8-42.8-63.3-31c22-72.1 64.1-107.1 126.2-105.1c45.8 1.2 67.5 31.1 64.9 89.4">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">Vimeo</div>
+            </div>
+            <div
+                class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/10 shadow-md p-6 flex flex-col items-center justify-center text-center">
+                <div class="icon-container w-full aspect-square">
+                    <svg class="w-full h-full" fill="currentColor" viewbox="0 0 640 512"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M639.8 298.6c-1.3 23.1-11.5 44.8-28.4 60.5s-39.2 24.4-62.3 24.1h-218c-4.8 0-9.4-2-12.8-5.4s-5.3-8-5.3-12.8V130.2c-.2-4 .9-8 3.1-11.4s5.3-6.1 9-7.7c0 0 20.1-13.9 62.3-13.9c25.8 0 51.1 6.9 73.3 20.1c17.3 10.2 32.3 23.8 44.1 40.1s20 34.8 24.2 54.4c7.5-2.1 15.3-3.2 23.1-3.2c11.7-.1 23.3 2.2 34.2 6.7s20.5 11.3 28.7 19.7s14.6 18.3 18.9 29.3s6.3 22.6 5.9 34.3zm-354-153.5c.1-1 0-2-.3-2.9s-.8-1.8-1.5-2.6s-1.5-1.3-2.4-1.7s-1.9-.6-2.9-.6s-2 .2-2.9.6s-1.7 1-2.4 1.7s-1.2 1.6-1.5 2.6s-.4 1.9-.3 2.9c-6 78.9-10.6 152.9 0 231.6c.2 1.7 1 3.3 2.3 4.5s3 1.8 4.7 1.8s3.4-.6 4.7-1.8s2.1-2.8 2.3-4.5c11.3-79.4 6.6-152 0-231.6zm-44 27.3c-.2-1.8-1.1-3.5-2.4-4.7s-3.1-1.9-5-1.9s-3.6.7-5 1.9s-2.2 2.9-2.4 4.7c-7.9 67.9-7.9 136.5 0 204.4c.3 1.8 1.2 3.4 2.5 4.5s3.1 1.8 4.8 1.8s3.5-.6 4.8-1.8s2.2-2.8 2.5-4.5c8.8-67.8 8.8-136.5.1-204.4zm-44.3-6.9c-.2-1.8-1-3.4-2.3-4.6s-3-1.8-4.8-1.8s-3.5.7-4.8 1.8s-2.1 2.8-2.3 4.6c-6.7 72-10.2 139.3 0 211.1c0 1.9.7 3.7 2.1 5s3.1 2.1 5 2.1s3.7-.7 5-2.1s2.1-3.1 2.1-5c10.5-72.8 7.3-138.2.1-211.1zm-44 20.6c0-1.9-.8-3.8-2.1-5.2s-3.2-2.1-5.2-2.1s-3.8.8-5.2 2.1s-2.1 3.2-2.1 5.2c-8.1 63.3-8.1 127.5 0 190.8c.2 1.8 1 3.4 2.4 4.6s3.1 1.9 4.8 1.9s3.5-.7 4.8-1.9s2.2-2.8 2.4-4.6c8.8-63.3 8.9-127.5.3-190.8zM109 233.7c0-1.9-.8-3.8-2.1-5.1s-3.2-2.1-5.1-2.1s-3.8.8-5.1 2.1s-2.1 3.2-2.1 5.1c-10.5 49.2-5.5 93.9.4 143.6c.3 1.6 1.1 3.1 2.3 4.2s2.8 1.7 4.5 1.7s3.2-.6 4.5-1.7s2.1-2.5 2.3-4.2c6.6-50.4 11.6-94.1.4-143.6m-44.1-7.5c-.2-1.8-1.1-3.5-2.4-4.8s-3.2-1.9-5-1.9s-3.6.7-5 1.9s-2.2 2.9-2.4 4.8c-9.3 50.2-6.2 94.4.3 144.5c.7 7.6 13.6 7.5 14.4 0c7.2-50.9 10.5-93.8.3-144.5zm-44.6 24.6c-.2-1.8-1.1-3.5-2.4-4.8s-3.2-1.9-5-1.9s-3.6.7-5 1.9s-2.3 2.9-2.4 4.8c-8.5 33.7-5.9 61.6.6 95.4c.2 1.7 1 3.3 2.3 4.4s2.9 1.8 4.7 1.8s3.4-.6 4.7-1.8s2.1-2.7 2.3-4.4c7.5-34.5 11.2-61.8.4-95.4z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="mt-4 text-sm font-medium">SoundCloud</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const root = document.documentElement;
+        const colorPanel = document.getElementById('color-panel');
+        const openColorsBtn = document.getElementById('open-colors-btn');
+        const closeColorsBtn = document.getElementById('close-colors-btn');
+
+        function toggleColorPanel(show) {
+            if (show) {
+                colorPanel.classList.remove('hidden');
+                openColorsBtn.classList.add('hidden');
+                closeColorsBtn.classList.remove('hidden');
+            } else {
+                colorPanel.classList.add('hidden');
+                openColorsBtn.classList.remove('hidden');
+                closeColorsBtn.classList.add('hidden');
+            }
+        }
+
+        const themeIconPath = document.getElementById("theme-icon-path");
+        const icons = document.querySelectorAll(".icon-container");
+        const paths = {
+            sun: "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707-.707M12 7a5 5 0 100 10 5 5 0 000-10z",
+            moon: "M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+        };
+        const colorInputs = {
+            light: { fill: document.getElementById('lightFill'), stroke: document.getElementById('lightStroke'), hoverFill: document.getElementById('lightHoverFill'), hoverStroke: document.getElementById('lightHoverStroke'), shimmer: document.getElementById('lightShimmer') },
+            dark: { fill: document.getElementById('darkFill'), stroke: document.getElementById('darkStroke'), hoverFill: document.getElementById('darkHoverFill'), hoverStroke: document.getElementById('darkHoverStroke'), shimmer: document.getElementById('darkShimmer') }
+        };
+
+        function applyColors() {
+            let style = document.getElementById("dynamic-color-styles");
+            if (!style) {
+                style = document.createElement("style");
+                style.id = "dynamic-color-styles";
+                document.head.appendChild(style);
+            }
+            const light = colorInputs.light;
+            const dark = colorInputs.dark;
+            style.innerHTML = `
+                html:not(.dark) .icon-container svg { fill: ${light.fill.value}; stroke: ${light.stroke.value}; }
+                html:not(.dark) .icon-container:hover svg { fill: ${light.hoverFill.value}; stroke: ${light.hoverStroke.value}; }
+                html:not(.dark) { --shimmer-color: ${light.shimmer.value}; }
+                html.dark .icon-container svg { fill: ${dark.fill.value}; stroke: ${dark.stroke.value}; }
+                html.dark .icon-container:hover svg { fill: ${dark.hoverFill.value}; stroke: ${dark.hoverStroke.value}; }
+                html.dark { --shimmer-color: ${dark.shimmer.value}; }
+            `;
+        }
+
+        function resetColors() {
+            colorInputs.light.fill.value = "#000000";
+            colorInputs.light.stroke.value = "#000000"; // match fill
+            colorInputs.light.hoverFill.value = "#16ebc2";
+            colorInputs.light.hoverStroke.value = "#16ebc2";
+            colorInputs.light.shimmer.value = "#808080";
+
+            colorInputs.dark.fill.value = "#FFFFFF";
+            colorInputs.dark.stroke.value = "#FFFFFF"; // match fill
+            colorInputs.dark.hoverFill.value = "#16ebc2";
+            colorInputs.dark.hoverStroke.value = "#16ebc2";
+            colorInputs.dark.shimmer.value = "#ffffff80";
+
+            applyColors();
+        }
+
+        function updateThemeIcon() {
+            if (!themeIconPath) return;
+            themeIconPath.setAttribute("d", root.classList.contains('dark') ? paths.moon : paths.sun);
+        }
+
+        function toggleDark() {
+            root.classList.toggle('dark');
+            localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+            updateThemeIcon();
+        }
+
+        function setMode(selectedButton, mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            selectedButton.classList.add('active');
+            icons.forEach(el => {
+                el.classList.remove('pulse', 'spin-3d', 'shimmer');
+                if (mode !== 'static') el.classList.add(mode);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeIcon();
+            resetColors();
+            setMode(document.querySelector('.mode-btn'), 'static');
+            Object.values(colorInputs).forEach(mode => {
+                Object.values(mode).forEach(input => input.addEventListener("input", applyColors));
+            });
+        });
+    </script>
+</body>
+
+</html>
